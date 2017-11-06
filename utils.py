@@ -1,4 +1,5 @@
 import os
+import json
 
 
 def load_data():
@@ -8,5 +9,5 @@ def load_data():
         fp = open('data/' + i, 'r')
         data = fp.read()
         fp.close()
-        ret.append(data)
+        ret.append(json.loads(data))
     return ret
