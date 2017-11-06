@@ -74,7 +74,7 @@ def get_search(name):
 def upload_search(name, id):
     global channels
     channels = load_channels()
-    channels[name]['results'] = request.data  # merge here
+    channels[name]['results'] = {**channels[name]['results'], **request.data}  # merge
     channels[name]['result_count'] += 1
     save_channels(channels)
     return jsonify({'status': 'ok'})
