@@ -13,7 +13,7 @@ def home():
 
 @app.route('/channels/<name>', methods=['POST'])
 def create_channel(name):
-    channels[name] = {'count': 0}
+    channels[name] = {'count': 0, 'search': None}
     return jsonify({'status': 'ok'})
 
 
@@ -31,4 +31,10 @@ def join_channel(name):
 @app.route('/leave_channel/<name>', methods=['POST'])
 def leave_channel(name):
     channels[name]['count'] -= 1
+    return jsonify({'status': 'ok'})
+
+
+@app.route('/set_search/<name>/<term>', methods=['POST'])
+def set_search(name, term):
+    channels[name]['search'] = term
     return jsonify({'status': 'ok'})
