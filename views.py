@@ -1,9 +1,9 @@
 from app import app
 from flask import request, jsonify
-from utils import load_data
+from utils import load_data, load_channels, save_channels
 
 
-channels = {}
+channels = load_channels()
 channel_members = {}
 all_data = load_data()
 
@@ -15,13 +15,19 @@ def home():
 
 @app.route('/channels/<name>', methods=['POST'])
 def create_channel(name):
+    global channels
+    channels = load_channels()
     channels[name] = {'count': 0, 'search': None, 'results': {}, 'result_count': 0}
+    save_channels(channels)
     return jsonify({'status': 'ok'})
 
 
 @app.route('/channels/<name>', methods=['DELETE'])
 def delete_channel(name):
+    global channels
+    channels = load_channels()
     del channels[name]
+    save_channels(channels)
     return jsonify({'status': 'ok'})
 
 
@@ -32,21 +38,30 @@ def list_channels():
 
 @app.route('/join_channel/<name>', methods=['POST'])
 def join_channel(name):
+    global channels
+    channels = load_channels()
     channels[name]['count'] += 1
+    save_channels(channels)
     return jsonify({'status': 'ok', 'id': channels[name]['count']})
 
 
 @app.route('/leave_channel/<name>', methods=['POST'])
 def leave_channel(name):
+    global channels
+    channels = load_channels()
     channels[name]['count'] -= 1
+    save_channels(channels)
     return jsonify({'status': 'ok'})
 
 
 @app.route('/set_search/<name>/<term>', methods=['POST'])
 def set_search(name, term):
+    global channels
+    channels = load_channels()
     channels[name]['search'] = term
     channels[name]['result_count'] = 0
     channels[name]['results'] = {}
+    save_channels(channels)
     return jsonify({'status': 'ok'})
 
 
@@ -57,8 +72,11 @@ def get_search(name):
 
 @app.route('/upload_search/<name>/<id>', methods=['POST'])
 def upload_search(name, id):
+    global channels
+    channels = load_channels()
     channels[name]['results'] = request.data  # merge here
     channels[name]['result_count'] += 1
+    save_channels(channels)
     return jsonify({'status': 'ok'})
 
 
