@@ -94,11 +94,12 @@ def download_data(name, id_):
     x = len(all_data)
     div = int(x / channels[name]['count'])
     print('div', div)
-    last = div
-    if id_ == channels[name]['count']:
-        last = x  # all
+    if int(id_) == channels[name]['count']:
+        final = all_data[(int(id_) - 1) * div :]
+    else:
+        final = all_data[(int(id_) - 1) * div : div]
     # merge and return
-    final = all_data[(int(id_) - 1) * div : last]
+    print(final, (int(id_) - 1) * div, len(all_data))
     ret = {}
     for x in final:
         ret = {**ret, **x}
