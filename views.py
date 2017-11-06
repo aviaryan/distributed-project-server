@@ -19,6 +19,12 @@ def create_channel(name):
     return jsonify({'status': 'ok'})
 
 
+@app.route('/channels/<name>', methods=['DELETE'])
+def delete_channel(name):
+    del channels[name]
+    return jsonify({'status': 'ok'})
+
+
 @app.route('/channels')
 def list_channels():
     return jsonify(channels)
