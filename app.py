@@ -17,3 +17,4 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 # import views below
+import views
