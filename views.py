@@ -1,4 +1,5 @@
 from app import app
+import json
 from flask import request, jsonify
 from utils import load_data, load_channels, save_channels
 
@@ -74,7 +75,8 @@ def get_search(name):
 def upload_search(name, id):
     global channels
     channels = load_channels()
-    channels[name]['results'] = {**channels[name]['results'], **request.data}  # merge
+    data = json.loads(request.data.decode('utf-8'))
+    channels[name]['results'] = {**channels[name]['results'], **data}  # merge
     channels[name]['result_count'] += 1
     save_channels(channels)
     return jsonify({'status': 'ok'})
@@ -92,4 +94,12 @@ def download_data(name, id_):
     x = len(all_data)
     div = int(x / channels[name]['count'])
     print('div', div)
-    return jsonify({'results': all_data[(int(id_) - 1) * div : div]})
+    last = div
+    if id_ == channels[name]['count']:
+        last = x  # all
+    # merge and return
+    final = all_data[(int(id_) - 1) * div : last]
+    ret = {}
+    for x in final:
+        ret = {**ret, **x}
+    return jsonify({'results': ret})

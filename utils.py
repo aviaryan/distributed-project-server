@@ -6,6 +6,8 @@ def load_data():
     arr = os.listdir('data')
     ret = []
     for i in arr:
+        if i == 'channels.json':
+            continue
         fp = open('data/' + i, 'r')
         data = fp.read()
         fp.close()
